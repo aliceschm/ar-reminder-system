@@ -1,35 +1,12 @@
-# GitHub Project Template
-
-This repository serves as a **template for new projects**, providing a consistent structure with:
-
-- Default labels for issues and pull requests
-- Issue and PR templates
-- Preconfigured `.github/` folder for automation via GitHub Actions
-- Suggested base for documentation and contribution guidelines
-
----
-
-## How to use this template
-
-1. Click the green **"Use this template"** button.
-2. Name your new repository.
-3. Make sure to include all files.
-4. Click **"Create repository from template"**.
-5. Done! Your new repository will be created with this base structure.
-6. Go to the **Actions** tab on GitHub, select the **Create default labels** workflow, and click **Run workflow** to create the default issue and PR labels automatically.
-
-
-
----
-
-## Included labels
-
-| Label           | Description                                 |
-|------------------|---------------------------------------------|
-| `bug`           | Fixes for code problems                      |
-| `chore`         | Maintenance without feature changes          |
-| `documentation` | Improvements or additions to documentation   |
-| `feat`          | New features or enhancements to the project  |
-| `refactor`      | Code cleanup and restructuring               |
-| `style`         | Changes related to visual presentation only  |
-| `test`          | Code tests and validations                   |
+# AR Reminder System
+A complete end-to-end solution for managing overdue invoices, recording collector interactions, automating reminders, and providing business insights.
+This project showcases integration between SQL databases, REST APIs, Power Apps, Power Automate, and Power BI.
+## Overview
+The AR Reminder System is designed to support Accounts Receivable teams by centralizing invoice data, streamlining follow-up activities, and providing visibility into collection performance.
+The MVP focuses on:
+- Storing clients, invoices, collectors, and comments in a relational database
+- Providing a FastAPI backend to expose this data through REST endpoints
+- Allowing collectors to submit comments and update payment likelihood
+- Integrating Power Apps and Power Automate to enable low-code workflows
+- Building dashboards in Power BI for aging analysis and payment forecasting
+- The project is fully modular and can be expanded with reminder automation, document generation, SharePoint storage, or NoSQL components.
