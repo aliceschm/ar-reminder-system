@@ -1,0 +1,45 @@
+name: Create default labels
+
+on:
+  workflow_dispatch:  # runs manually in Actions > Run workflow
+
+permissions:
+  issues: write
+
+jobs:
+  create-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create labels using GitHub Script
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const labels = [
+              { name: "feat", color: "a67b5b", description: "New features or enhancements to the project" },
+              { name: "bug", color: "b55252", description: "Fixes for code problems" },
+              { name: "chore", color: "c1b398", description: "Maintenance without feature changes" },
+              { name: "test", color: "7a9e9f", description: "Code tests and validations" },
+              { name: "documentation", color: "d6a77a", description: "Improvements or additions to documentation" },
+              { name: "refactor", color: "9b8f82", description: "Code cleanup and restructuring" },
+              { name: "style", color: "bfa5a0", description: "Changes related to visual presentation only" }
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color: label.color,
+                  description: label.description,
+                });
+                console.log(`Label '${label.name}' created.`);
+              } catch (error) {
+                if (error.status === 422) {
+                  console.log(`Label '${label.name}' already exists.`);
+                } else {
+                  throw error;
+                }
+              }
+            }
