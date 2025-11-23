@@ -1,0 +1,35 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# --- Virtual environment ---
+venv/
+.env/
+.venv/
+
+# --- VS Code ---
+.vscode/
+
+# --- MacOS ---
+.DS_Store
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Coverage / Test ---
+.coverage
+htmlcov/
+.cache/
+pytest_cache/
+
+# --- Environment files ---
+.env.local
+.env.dev
+.env.prod
