@@ -3,12 +3,18 @@ import numpy as np
 from datetime import datetime
 
 def calculate_aging(df, reference_date=None):
-    # reference date as datetime.date
+    # if reference_date is None, use today
     if reference_date is None:
-        reference_date = datetime.today().date()
+        reference_date = pd.Timestamp.today()
+    else:
+        reference_date = pd.Timestamp(reference_date)
+
+    # ensure due_date is datetime
+    df['due_date'] = pd.to_datetime(df['due_date'])
 
     # calculate days overdue
     df['days_overdue'] = (reference_date - df['due_date']).dt.days
+    print(df['days_overdue'])
 
     conditions = [
         df['days_overdue'] < 0,
