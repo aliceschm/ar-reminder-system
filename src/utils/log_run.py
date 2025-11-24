@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from config.db import engine  # postgres connection
+from src.config.db import engine  # postgres connection
 
 # insert a log entry in the cntrl_logs table.
 def log_run(process_name, info):
