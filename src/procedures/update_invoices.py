@@ -23,15 +23,6 @@ def transform_invoices(df_invoices):
     # transform to Open AR df
     df = df_invoices.copy()
     
-    df_currency = get_currency()
-
-    #merge with df_currency to get currency per invoice
-    df = df.merge(
-    df_currency,
-    how="left",
-    left_on="currency",
-    right_on="currency_code")
-
     # create new columns
     df['total_amount'] = df['amount']
     df['balance_amount'] = df['amount']
@@ -39,8 +30,11 @@ def transform_invoices(df_invoices):
     df['comment'] = None
     
     # convert amounts to USD and create usd columns
-    df["amount_usd"] = df["total_amount"] * df["usd_rate"]
-    df["balance_amount_usd"] = df["balance_amount"] * df["usd_rate"]
+    currency_rates = get_currency()
+    df['usd_rate'] = df['currency_code'].map(currency_rates)
+    df['amount_usd'] = df['amount'] * df['usd_rate']
+    df['balance_amount_usd'] = df['balance_amount'] * df['usd_rate']
+
 
     # calculate aging and returns df with aging_group column
     df = calculate_aging(df)
@@ -78,7 +72,7 @@ def update_invoices():
     new_invoices = get_new_invoices(last_run)
 
     if new_invoices.empty:
-        log_run(PROCESS_NAME, "0 rows inserted")
+        log_run(PROCESS_NAME, "0 invoices inserted")
         return
 
     # transform df and count
