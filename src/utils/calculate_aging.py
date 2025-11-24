@@ -2,34 +2,33 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-# returns the aging group for a given due date.
-# aging groups:
-#     - Not due
-#     - 0-30
-#     - 31-60
-#     - 61-90
-#     - 91-180
-#     - 181-365
-#     - >365
-
-def calculate_aging(due_date, reference_date=None):
+def calculate_aging(df, reference_date=None):
+    # reference date as datetime.date
     if reference_date is None:
-        reference_date = datetime.today()
+        reference_date = datetime.today().date()
 
-    days_overdue = (reference_date.date() - due_date).days
+    # calculate days overdue
+    df['days_overdue'] = (reference_date - df['due_date']).dt.days
 
-    if days_overdue < 0:
-        return "Not due"
-    elif days_overdue <= 30:
-        return "0-30"
-    elif days_overdue <= 60:
-        return "31-60"
-    elif days_overdue <= 90:
-        return "61-90"
-    elif days_overdue <= 180:
-        return "91-180"
-    elif days_overdue <= 365:
-        return "181-365"
-    else:
-        return ">365"
+    conditions = [
+        df['days_overdue'] < 0,
+        df['days_overdue'] <= 30,
+        df['days_overdue'] <= 60,
+        df['days_overdue'] <= 90,
+        df['days_overdue'] <= 180,
+        df['days_overdue'] <= 365
+    ]
+
+    labels = [
+        "Not due",
+        "0-30",
+        "31-60",
+        "61-90",
+        "91-180",
+        "181-365"
+    ]
+
+    # creates aging_group column with group labels according to the days overdue conditions
+    df['aging_group'] = np.select(conditions, labels, default="Unknown")
+    return df
 
