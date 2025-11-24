@@ -6,6 +6,7 @@ from src.utils.get_last_run_time import get_last_run_time
 from src.utils.log_run import log_run
 from src.utils.calculate_aging import calculate_aging
 from src.utils.get_currency import get_currency
+from src.utils.get_collector import get_collector
 
 PROCESS_NAME = "update_invoices"
    
@@ -35,13 +36,17 @@ def transform_invoices(df_invoices):
     df['amount_usd'] = df['amount'] * df['usd_rate']
     df['balance_amount_usd'] = df['balance_amount'] * df['usd_rate']
 
-
     # calculate aging and returns df with aging_group column
     df = calculate_aging(df)
 
+    # add collector column
+    collectors_dict = get_collector()  # {customer_id: collector_name}
+    df['collector'] = df['customer_id'].map(collectors_dict).fillna("Unassigned")
+
+
     return df[['doc_number', 'customer_id', 'contract_number',
                'issue_date', 'due_date', 'total_amount', 'balance_amount', 'amount_usd', 'balance_amount_usd',
-               'aging_group', 'status', 'comment', 'created_at']]
+               'aging_group', 'status', 'comment', 'created_at', 'collector']]
 
 
 def insert_open_ar(df):
@@ -52,12 +57,12 @@ def insert_open_ar(df):
         doc_number, customer_id, contract_number,
         issue_date, due_date,
         total_amount, balance_amount, amount_usd, balance_amount_usd,
-        aging_group, status, comment, created_at
+        aging_group, status, comment, created_at, collector
     ) VALUES (
         :doc_number, :customer_id, :contract_number,
         :issue_date, :due_date,
         :total_amount, :balance_amount, :amount_usd, :balance_amount_usd,
-        :aging_group, :status, :comment, :created_at
+        :aging_group, :status, :comment, :created_at, :collector
     )
     ON CONFLICT (doc_number) DO NOTHING;
     """
