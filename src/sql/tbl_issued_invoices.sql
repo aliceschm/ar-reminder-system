@@ -7,7 +7,7 @@ CREATE TABLE public.issued_invoices (
     issue_date          DATE NOT NULL,             -- document issue date
     due_date            DATE NOT NULL,             -- due date 
     amount              NUMERIC(12,2) NOT NULL,    -- value in original currency
-    currency            VARCHAR(10) NOT NULL,      -- original currency
+    currency_code       VARCHAR(10) NOT NULL,      -- original currency
     description         TEXT,                       -- optional: ERP description
     type                TEXT NOT NULL DEFAULT 'LEASE'::TEXT,
     doc_reference       VARCHAR(100),
