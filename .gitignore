@@ -10,8 +10,9 @@ build/
 
 # --- Virtual environment ---
 venv/
-.env/
+.env
 .venv/
+
 
 # --- VS Code ---
 .vscode/
