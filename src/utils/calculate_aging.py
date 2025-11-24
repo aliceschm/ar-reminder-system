@@ -14,27 +14,12 @@ def calculate_aging(df, reference_date=None):
 
     # calculate days overdue
     df['days_overdue'] = (reference_date - df['due_date']).dt.days
-    print(df['days_overdue'])
 
-    conditions = [
-        df['days_overdue'] < 0,
-        df['days_overdue'] <= 30,
-        df['days_overdue'] <= 60,
-        df['days_overdue'] <= 90,
-        df['days_overdue'] <= 180,
-        df['days_overdue'] <= 365
-    ]
+    # define the bins for aging groups
+    bins = [-np.inf, -1, 30, 60, 90, 180, 365, np.inf]
+    labels = ["Not due", "0-30", "31-60", "61-90", "91-180", "181-365", "Over 365"]
 
-    labels = [
-        "Not due",
-        "0-30",
-        "31-60",
-        "61-90",
-        "91-180",
-        "181-365"
-    ]
+    # creates aging_group column using pd.cut to categorize the days_overdue into aging groups
+    df['aging_group'] = pd.cut(df['days_overdue'], bins=bins, labels=labels)
 
-    # creates aging_group column with group labels according to the days overdue conditions
-    df['aging_group'] = np.select(conditions, labels, default="Unknown")
     return df
-
