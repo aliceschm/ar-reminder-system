@@ -5,5 +5,6 @@ CREATE TABLE public.customers (
     tax_id          VARCHAR(50),                  -- fiscal identifier (optional)
     segment         VARCHAR(100),                 -- customer segment/industry (optional)
     country         VARCHAR(100),
+    collector_id    INT REFERENCES public.collectors(collector_id),
     created_at      TIMESTAMPTZ DEFAULT NOW()
 );
