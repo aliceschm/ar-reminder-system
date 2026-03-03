@@ -1,3 +1,4 @@
+# Procedure to update open_ar table with new invoices from issued_invoices
 import pandas as pd
 import numpy as np
 from sqlalchemy import text
@@ -12,6 +13,7 @@ PROCESS_NAME = "update_invoices"
    
 
 def get_new_invoices(last_run_time):
+    """Fetch new invoices from issued_invoices table created after last_run_time"""
     query = """
     SELECT *
     FROM public.issued_invoices
@@ -21,6 +23,7 @@ def get_new_invoices(last_run_time):
     return df
 
 def transform_invoices(df_invoices):
+    """Transform issued_invoices df to match open_ar structure and add necessary columns"""
     # transform to Open AR df
     df = df_invoices.copy()
     
@@ -50,6 +53,7 @@ def transform_invoices(df_invoices):
 
 
 def insert_open_ar(df):
+    """Insert transformed invoices into open_ar table, ignore duplicates based on doc_number"""
     df_records = df.to_dict(orient="records")
 
     query = """
@@ -73,6 +77,7 @@ def insert_open_ar(df):
 
 
 def update_invoices():
+    """Main procedure to orchestrate updating open_ar with new invoices from issued_invoices"""
     last_run = get_last_run_time(PROCESS_NAME)
     new_invoices = get_new_invoices(last_run)
 
@@ -90,4 +95,6 @@ def update_invoices():
 
     log_run(PROCESS_NAME, info)
 
-update_invoices()
+# Run the procedure, prevent execution if imported as module
+if __name__ == "__main__":
+    update_invoices()

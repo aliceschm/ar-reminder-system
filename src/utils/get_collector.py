@@ -3,6 +3,7 @@ from src.config.db import engine
 import pandas as pd
 
 def get_collector():
+    """Fetch collector names for each customer_id and return as dict {customer_id: collector_name}"""
     query = """
         SELECT
             cust.customer_id,
