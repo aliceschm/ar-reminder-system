@@ -1,12 +1,57 @@
 # AR Reminder System
-A complete end-to-end solution for managing overdue invoices, recording collector interactions, automating reminders, and providing business insights.
-This project showcases integration between SQL databases, REST APIs, Power Apps, Power Automate, and Power BI.
-## Overview
-The AR Reminder System is designed to support Accounts Receivable teams by centralizing invoice data, streamlining follow-up activities, and providing visibility into collection performance.
-The MVP focuses on:
-- Storing clients, invoices, collectors, and comments in a relational database
-- Providing a FastAPI backend to expose this data through REST endpoints
-- Allowing collectors to submit comments and update payment likelihood
-- Integrating Power Apps and Power Automate to enable low-code workflows
-- Building dashboards in Power BI for aging analysis and payment forecasting
-- The project is fully modular and can be expanded with reminder automation, document generation, SharePoint storage, or NoSQL components.
+
+Modular Accounts Receivable system designed to consolidate invoice data,
+expose read models via API, and enable automation and analytical workflows.
+
+---
+
+## Current Status — Phase 1: Data Layer (Implemented)
+
+The data foundation of the system is fully implemented.
+
+- Incremental extraction from `issued_invoices`
+- Currency normalization (USD conversion)
+- Aging bucket calculation
+- Collector assignment
+- Materialization into `open_ar`
+- Execution logging and run control
+
+This phase establishes a stable read model to support future API, automation, and interface layers.
+
+---
+
+## Roadmap
+
+| Phase | Scope | Status |
+|-------|-------|--------|
+| 1. Data Layer (ETL) | Incremental pipeline → `open_ar` materialization | ✅ Implemented |
+| 2. Read API | `GET /open-ar`, filters, pagination, dashboard aggregations | 🔄 Planned |
+| 3. Interface (separate repository) | Collector view + management dashboard | ⏳ Planned |
+| 4. Automation | Scheduled reminders based on aging buckets | ⏳ Planned |
+| 5. Actions (Transactional) | Apply payment, write-off, manual reminder, audit trail | ⏳ Planned |
+| 6. AI Assistant | Prioritization insights and risk signals | ⏳ Planned |
+
+---
+
+## Tech Stack (Current Phase)
+
+- Python
+- Pandas
+- PostgreSQL
+- SQLAlchemy (engine-level usage)
+- Raw SQL for explicit query control
+
+Future phases will introduce:
+
+- FastAPI (REST layer)
+- Frontend interface
+- Workflow automation
+- AI-driven insight layer
+
+---
+
+## Design Principles
+
+- Data-first architecture (stable read model before transactional complexity)
+- Clear separation between data processing and API layers
+- Modular evolution to avoid large refactors in future phases
