@@ -3,6 +3,7 @@ import numpy as np
 from datetime import datetime
 
 def calculate_aging(df, reference_date=None):
+    """Calculate aging group for each invoice based on due_date and reference_date (default to today)"""
     # if reference_date is None, use today
     if reference_date is None:
         reference_date = pd.Timestamp.today()
