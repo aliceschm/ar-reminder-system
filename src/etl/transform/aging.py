@@ -22,5 +22,5 @@ def calculate_aging(df, reference_date=None):
 
     # creates aging_group column using pd.cut to categorize the days_overdue into aging groups
     df['aging_group'] = pd.cut(df['days_overdue'], bins=bins, labels=labels)
-
+    
     return df

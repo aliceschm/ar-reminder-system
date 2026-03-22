@@ -1,7 +1,7 @@
-from src.procedures.update_invoices import update_invoices
+from src.etl.pipelines.build_open_ar import build_open_ar
 
 try:
-    update_invoices()
+    build_open_ar()
     print('Success!')
 except Exception as e:
     print(e)

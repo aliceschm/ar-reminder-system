@@ -1,11 +1,11 @@
 from sqlalchemy import text
 from src.config.db import engine  # postgres connection
 
-# insert a log entry in the cntrl_logs table.
+# insert a log entry in the process_runs table.
 def log_run(process_name, info):
-    """Insert a log entry into cntrl_logs table with process_name, current timestamp, and info message"""
+    """Insert a log entry into process_runs table with process_name, current timestamp, and info message"""
     query = """
-    INSERT INTO public.cntrl_logs (process_name, last_updt_time, info)
+    INSERT INTO public.process_runs (process_name, last_updt_time, info)
     VALUES (:process_name, now(), :info)
     """
 

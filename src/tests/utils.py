@@ -1,7 +1,7 @@
 
-from src.utils.get_last_run_time import get_last_run_time
-from src.utils.get_currency import get_currency
-from src.utils.get_collector import get_collector
+from src.etl.extract.process_log import get_last_run_time
+from src.etl.extract.currency import get_currency
+from src.etl.extract.collectors import get_collector
 
 def test_get_last_run_time():
     result = get_last_run_time('update_invoices')
