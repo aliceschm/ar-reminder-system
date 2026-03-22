@@ -1,8 +1,9 @@
+import pandas as pd
 from sqlalchemy import text
 from src.config.db import engine
-import pandas as pd
 
-def get_collector():
+
+def get_collectors_map():
     """Fetch collector names for each customer_id and return as dict {customer_id: collector_name}"""
     query = """
         SELECT
@@ -14,4 +15,7 @@ def get_collector():
     """
     
     df = pd.read_sql_query(text(query), engine)
+    print('Extract collectors Successful')
     return dict(zip(df['customer_id'], df['collector_name']))
+
+
