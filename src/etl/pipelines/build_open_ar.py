@@ -15,48 +15,62 @@ PROCESS_NAME = "build_open_ar"
 def build_open_ar():
     """Main procedure to orchestrate updating open_ar with new invoices from issued_invoices"""
     try:
-        print(f"Starting {PROCESS_NAME} pipeline...")
+        print("=" * 50)
+        print("OPEN AR PIPELINE")
+        print("=" * 50)
+        print()
+        print("[START] Pipeline execution started")
+        print()
 
-        last_run = get_last_run_time(PROCESS_NAME)       
+        last_run = get_last_run_time(PROCESS_NAME)
         if str(last_run) == "1970-01-01":
-            print("Last run: first execution")
+            print("[INFO] Last run: first execution")
         else:
-            print(f"Last run: {last_run}")
+            print(f"[INFO] Last run: {last_run}")
 
         new_invoices = get_new_invoices(last_run)
-        print(f"New invoices found: {len(new_invoices)}")
+        print(f"[INFO] New invoices found: {len(new_invoices)}")
+        print()
 
         if new_invoices.empty:
-            print("No new invoices found. Nothing to insert into open_ar.")
+            print("[INFO] No new invoices found. Nothing to insert into open_ar.")
+            print()
             log_run(PROCESS_NAME, "0 invoices inserted")
-            print("Process run logged.")
-            print(f"Finished {PROCESS_NAME} pipeline.")
+            print("[SUCCESS] Process run logged")
+            print("[END] Pipeline finished successfully")
+            print()
+            print("=" * 50)
             return
 
         currency_rates = get_currency_rates()
-        print(f"Currency rates loaded: {len(currency_rates)}")
+        print(f"[EXTRACT] Currency rates loaded: {len(currency_rates)}")
 
         collectors_map = get_collectors_map()
-        print(f"Collectors loaded: {len(collectors_map)}")
+        print(f"[EXTRACT] Collectors loaded: {len(collectors_map)}")
+        print()
 
         df_transformed = transform_invoices(
             new_invoices,
             currency_rates,
             collectors_map,
         )
-        print(f"Invoices transformed: {len(df_transformed)}")
+        print(f"[TRANSFORM] Invoices transformed: {len(df_transformed)}")
+        print()
 
         count_processed = len(df_transformed)
         info = f"{count_processed} new invoices inserted"
 
         insert_open_ar(df_transformed)
-        print(f"Rows inserted into open_ar: {count_processed}")
+        print(f"[LOAD] Open AR updated: {count_processed} rows inserted")
+        print()
 
         log_run(PROCESS_NAME, info)
-        print("Process run logged.")
-        print(f"Finished {PROCESS_NAME} pipeline.")
+        print("[SUCCESS] Process run logged")
+        print("[END] Pipeline finished successfully")
+        print()
+        print("=" * 50)
     except Exception as e:
-        print(f"Pipeline failed: {e}")
+        print(f"[ERROR] Pipeline failed: {e}")
         raise
 
 
