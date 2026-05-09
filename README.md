@@ -1,90 +1,151 @@
-# AR Reminder System
+# Open AR Pipeline
 
-Accounts Receivable system designed to consolidate invoice data, expose financial state via read models, and enable automation and analytical workflows.
-
----
-
-## Overview
-
-This project started as a full AR system, with planned support for:
-- API access
-- collector interfaces
-- automation (reminders)
-- transactional operations (payments, write-offs)
-
-The initial implementation focused on building a **reliable financial read model** as the foundation for these features.
+Python ETL pipeline for Accounts Receivable operations that incrementally builds and maintains an open_ar table from issued invoices.
+The pipeline extracts newly issued invoices, enriches them with currency conversion and collector ownership data, transforms the information into an operational receivables view, and logs each execution for traceability.
 
 ---
 
-## Implemented — Data Layer (Phase 1)
+## Features
 
-The data foundation of the system is fully implemented.
-
-- Incremental extraction from `issued_invoices`
-- Currency normalization (USD conversion)
+- Incremental invoice extraction
+- Currency normalization to USD
+- Collector ownership enrichment
 - Aging bucket calculation
-- Collector assignment
-- Materialization into `open_ar`
-- Execution logging and run control
-
-This phase produces a consistent and queryable view of open receivables, designed to support dashboards, automation, and downstream services.
+- Open AR materialization
+- Pipeline execution logging
+- Dockerized PostgreSQL environment
 
 ---
 
-## Original Design Approach
+## Tech Stack
 
-The system was designed around a **data-first architecture**, where:
-
-- financial state is computed via ETL
-- `open_ar` acts as the central read model
-- APIs, automation, and interfaces consume this derived state
-
-Planned evolution included:
-
-- Read API (`GET /open-ar`, filters, aggregations)
-- Collector interface and dashboards
-- Automated reminders based on aging buckets
-- Transactional actions (payments, write-offs, adjustments)
-- AI-driven prioritization
+- Python
+- Pandas
+- SQLAlchemy
+- PostgreSQL
+- Docker Compose
 
 ---
 
-## Limitations Identified
+## Architecture
 
-During development, some limitations of this approach became clear:
+```txt
+issued_invoices
+        ↓
+extract
+        ↓
+transform
+  - currency conversion
+  - collector enrichment
+  - aging calculation
+        ↓
+load
+        ↓
+open_ar
+```
+---
 
-- Financial state is **derived but not explicitly modeled**
-- No clear representation of **state changes over time**
-- Operational actions (payments, adjustments) are difficult to model cleanly
-- Limited auditability of how invoice state evolves
-- Tight coupling between data computation and business logic
+## How to run it locally
 
-These constraints make it harder to evolve the system into a full operational AR platform.
+### 1. Start PostgreSQL
+
+```bash
+docker compose up -d
+```
+
+### 2. Create environment file
+
+```bash
+cp .env.example .env
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Run pipeline
+
+```bash
+python src/main.py
+```
 
 ---
 
-## Architecture Evolution
+## Example Queries
 
-Based on these limitations, the system is being redesigned using an **event-driven approach**, where:
+### Open invoices
 
-- document ingestion produces domain events
-- invoice lifecycle is modeled through operations
-- financial state is derived from events, not recomputed
-- read models (like `open_ar`) become projections, not the source of truth
+```sql
+SELECT * FROM open_ar;
+```
 
-This repository represents the **first iteration** of the system, focused on building a stable financial read model.
+### Collector portfolio totals
 
-The next iteration focuses on modeling Accounts Receivable as a set of domain operations and state transitions.
+```sql
+SELECT
+    collector,
+    SUM(balance_amount_usd) AS total_balance_usd
+FROM open_ar
+GROUP BY collector;
+```
+
+### Overdue invoices
+
+```sql
+SELECT
+    doc_number,
+    customer_id,
+    due_date,
+    aging_group,
+    balance_amount_usd
+FROM open_ar
+WHERE aging_group != 'Not due';
+```
 
 ---
 
-## Next Iteration
+## Sample Output
 
-The system is currently being redesigned as a separate project (`ar-ops`) using an event-driven approach.
+```txt
+==================================================
+OPEN AR PIPELINE
+==================================================
 
-This iteration focuses on:
-- modeling invoice lifecycle through domain events
-- explicit state transitions (payments, adjustments, write-offs)
-- projections for read models (e.g. `open_ar`)
+[START] Pipeline execution started
 
-(Repository will be published soon)
+[INFO] Last run: first execution
+[INFO] New invoices found: 2
+
+[EXTRACT] Currency rates loaded: 3
+[EXTRACT] Collectors loaded: 2
+
+[TRANSFORM] Invoices transformed: 2
+
+[LOAD] Open AR updated: 2 rows inserted
+
+[SUCCESS] Process run logged
+[END] Pipeline finished successfully
+
+==================================================
+```
+
+---
+
+## Database Initialization
+
+The PostgreSQL container automatically initializes:
+
+- schema creation
+- seed data
+- sample invoices
+- sample currency rates
+- sample collectors/customers
+
+using:
+
+```txt
+sql/01_schema.sql
+sql/02_seed.sql
+```
