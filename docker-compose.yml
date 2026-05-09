@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: open-ar-postgres
+
+    environment:
+      POSTGRES_DB: open_ar
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+
+    restart: unless-stopped
