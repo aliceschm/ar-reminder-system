@@ -15,7 +15,6 @@ def get_collectors_map():
     """
     
     df = pd.read_sql_query(text(query), engine)
-    print('Extract collectors Successful')
     return dict(zip(df['customer_id'], df['collector_name']))
 
 
