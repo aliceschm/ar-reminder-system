@@ -1,6 +1,6 @@
 
 from sqlalchemy import text
-from src.config.db import engine  # postgres connection
+from config.db import engine  # postgres connection
 
 # returns the most recent execution timestamp for a specified process.
 def get_last_run_time(process_name):

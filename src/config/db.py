@@ -19,8 +19,8 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 
 # Test the connection
-try:
-    with engine.connect() as connection:
-        print("Connection successful!")
-except Exception as e:
-    print(f"Failed to connect: {e}")
+# try:
+#     with engine.connect() as connection:
+#         print("Connection successful!")
+# except Exception as e:
+#     print(f"Failed to connect: {e}")
