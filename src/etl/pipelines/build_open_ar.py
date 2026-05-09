@@ -1,12 +1,12 @@
-from src.etl.extract.process_log import get_last_run_time
-from src.etl.extract.invoices import get_new_invoices
-from src.etl.extract.currency import get_currency_rates
-from src.etl.extract.collectors import get_collectors_map
+from etl.extract.process_log import get_last_run_time
+from etl.extract.invoices import get_new_invoices
+from etl.extract.currency import get_currency_rates
+from etl.extract.collectors import get_collectors_map
 
-from src.etl.transform.invoices import transform_invoices
+from etl.transform.invoices import transform_invoices
 
-from src.etl.load.open_ar import insert_open_ar
-from src.etl.load.log_run import log_run
+from etl.load.open_ar import insert_open_ar
+from etl.load.log_run import log_run
 
 
 PROCESS_NAME = "build_open_ar"

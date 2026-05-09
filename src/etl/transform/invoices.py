@@ -1,4 +1,4 @@
-from src.etl.transform.aging import calculate_aging
+from etl.transform.aging import calculate_aging
 
 
 def transform_invoices(df_invoices, currency_rates, collectors_map):

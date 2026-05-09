@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from src.config.db import engine  
+from config.db import engine  
 
 def insert_open_ar(df):
     """Insert transformed invoices into open_ar table, ignore duplicates based on doc_number"""

@@ -1,6 +1,6 @@
 import pandas as pd
 from sqlalchemy import text
-from src.config.db import engine
+from config.db import engine
 
 
 def get_collectors_map():

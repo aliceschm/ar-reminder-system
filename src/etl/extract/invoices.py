@@ -1,6 +1,6 @@
 import pandas as pd
 from sqlalchemy import text
-from src.config.db import engine  
+from config.db import engine  
 
 def get_new_invoices(last_run_time):
     """Fetch new invoices from issued_invoices table created after last_run_time"""
