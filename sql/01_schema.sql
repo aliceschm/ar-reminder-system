@@ -24,7 +24,7 @@ CREATE TABLE public.currency (
 );
 
 CREATE TABLE public.issued_invoices (
-    doc_number       VARCHAR(100) PRIMARY KEY,
+    doc_number       VARCHAR(100) NOT NULL,
     customer_id      CHAR(8) NOT NULL REFERENCES public.customers(customer_id) ON DELETE CASCADE,
     contract_number  VARCHAR(100),
     issue_date       DATE NOT NULL,
@@ -35,12 +35,14 @@ CREATE TABLE public.issued_invoices (
     created_at       TIMESTAMPTZ DEFAULT NOW(),
     document_type    VARCHAR(20) NOT NULL DEFAULT 'INVOICE',
     type             TEXT DEFAULT 'Leasing',
-    doc_reference    VARCHAR(100)
+    doc_reference    VARCHAR(100),
+    PRIMARY KEY (doc_number, customer_id, document_type)
 );
 
 CREATE TABLE public.open_ar (
-    doc_number          VARCHAR(100) PRIMARY KEY,
+    doc_number          VARCHAR(100) NOT NULL,
     customer_id         CHAR(8) NOT NULL,
+    document_type       VARCHAR(20) NOT NULL,
     contract_number     VARCHAR(100),
     issue_date          DATE NOT NULL,
     due_date            DATE NOT NULL,
@@ -54,7 +56,24 @@ CREATE TABLE public.open_ar (
     created_at          TIMESTAMP NOT NULL,
     last_updt_time      TIMESTAMP DEFAULT NOW(),
     collector           VARCHAR(255),
-    last_reminder_dt    TIMESTAMP
+    last_reminder_dt    TIMESTAMP,
+    PRIMARY KEY (doc_number, customer_id, document_type)
+);
+
+CREATE TABLE public.rejected_invoices (
+    rejected_invoice_id SERIAL PRIMARY KEY,
+    doc_number          VARCHAR(100),
+    customer_id         CHAR(8),
+    document_type       VARCHAR(20),
+    contract_number     VARCHAR(100),
+    issue_date          DATE,
+    due_date            DATE,
+    amount              NUMERIC(12, 2),
+    currency_code       VARCHAR(10),
+    rejection_stage     VARCHAR(100) NOT NULL,
+    rejection_reason    TEXT NOT NULL,
+    created_at          TIMESTAMPTZ,
+    rejected_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE public.process_runs (

@@ -65,11 +65,20 @@ cp .env.example .env
 pip install -r requirements.txt
 ```
 
-### 4. Run pipeline
+### 4. Run the pipeline
 
 ```bash
 python src/main.py
 ```
+
+### 5. Issue more invoices without resetting PostgreSQL
+
+```bash
+python src/issue_new_invoices.py --count 10
+python src/main.py
+```
+
+The helper script inserts fresh rows into `issued_invoices` with new document numbers and current timestamps, so the incremental pipeline picks them up on the next run.
 
 ---
 
