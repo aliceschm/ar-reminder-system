@@ -125,14 +125,18 @@ OPEN AR PIPELINE
 [START] Pipeline execution started
 
 [INFO] Last run: first execution
-[INFO] New invoices found: 2
+[INFO] New invoices found: 50
 
-[EXTRACT] Currency rates loaded: 3
-[EXTRACT] Collectors loaded: 2
+[TRANSFORM] Invoices transformed: 43
+[TRANSFORM] Invoices rejected: 7
 
-[TRANSFORM] Invoices transformed: 2
+[CHECK] Currency found for all invoice currencies: NO
+[CHECK] Missing currency codes: AUD, CAD, CHF, GBP, JPY, MXN
+[CHECK] All collectors assigned correctly: NO
+[CHECK] Customers without collectors: CUST0003
 
-[LOAD] Open AR updated: 2 rows inserted
+[LOAD] Open AR updated: 43 rows inserted
+[LOAD] Rejected invoices stored: 7 rows inserted
 
 [SUCCESS] Process run logged
 [END] Pipeline finished successfully
